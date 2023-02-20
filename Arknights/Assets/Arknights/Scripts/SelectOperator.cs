@@ -1,17 +1,19 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SelectOperator : MonoBehaviour
 {
     RaycastHit hit;
-    Transform selectedTarget;
     
     Quaternion mainposition;
     static SelectOperator instance = null;
+    public static Transform selectedTarget;
 
     public Transform Cam; //Object you want to rotate
     public Transform myTransform; //Object you want to rotate
     public GameObject UI;
-
+    public Image skill;
+    
     private Vector2 screenPoint;
 
     public static SelectOperator Instance
@@ -38,10 +40,7 @@ public class SelectOperator : MonoBehaviour
     void clearTarget()
     {
         if (selectedTarget == null) return;
-        UI.SetActive(false);
         selectedTarget = null;
-        Debug.Log("오퍼레이터 해제");
-        Debug.Log(selectedTarget);
     }
 
     void selectTarget(Transform obj)
@@ -50,9 +49,9 @@ public class SelectOperator : MonoBehaviour
 
         UI.SetActive(true);
         selectedTarget = obj;
+        
+        skill.sprite = selectedTarget.GetComponent<Operators>().skill;
 
-        Debug.Log("오퍼레이터 선택");
-        Debug.Log(selectedTarget.transform.position);
     }
 
     void Update()
@@ -66,11 +65,25 @@ public class SelectOperator : MonoBehaviour
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layer))
             {
                 Transform obj = hit.transform;
-                selectTarget(obj);
+                if(obj.GetComponent<Operators>().firstSetting == false)
+                {
+                    selectTarget(obj);
+                }
+                
             }
             else /* Block을 선택하지 않은 경우 */
             {
-                clearTarget();
+                int layer2 = 1 << LayerMask.NameToLayer("UI");
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layer2))
+                {
+                    Debug.Log("여기 오는건가");
+
+                }
+                else
+                {
+                    clearTarget();
+                }
+                
             }
         }
         if (selectedTarget != null)
@@ -79,7 +92,13 @@ public class SelectOperator : MonoBehaviour
         }
         else
         {
-            Cam.position = new Vector3(25, 20, 20);
+            Cam.position = new Vector3(27, 20, 20);
+            UI.SetActive(false);
         }
+    }
+    public void Despwan()
+    {
+        selectedTarget.GetComponent<Operators>().Despwan();
+        clearTarget();
     }
 }

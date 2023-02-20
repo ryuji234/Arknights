@@ -8,6 +8,7 @@ TagManager:
   - Road
   - Wall
   - Operators
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -42,6 +43,15 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Icon
+    uniqueID: 3248490093
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Operator
+    uniqueID: 829497613
+    locked: 0
+  - name: UI
+    uniqueID: 3167993401
     locked: 0
