@@ -6,36 +6,42 @@ using UnityEngine.UIElements;
 
 public class Operators : MonoBehaviour
 {
+    public Sprite illust;
     public Sprite skill;
-    public List<GameObject> StopObjects;
-    public List<GameObject> FoundObjects;
-    public int maxHP;
-    public int HP;
-    public int attack;
-    public int defence;
-    public int resist;
-    public int respawn;
-    public int spawnCost;
-    public int ableToStop;
-    public int Stop;
-    public int Skillpoint;
-    public float attackspeed;
-    public bool firstSetting = true;
+    public GameObject button;
+    public GameObject skillActive;
+
+    [HideInInspector] public List<GameObject> StopObjects;
+    [HideInInspector] public List<GameObject> FoundObjects;
+    [HideInInspector] public int maxHP;
+    [HideInInspector] public int HP;
+    [HideInInspector] public int attack;
+    [HideInInspector] public int ableToStop;
+    [HideInInspector] public int Stop;
+    [HideInInspector] public int maxSkillpoint;
+    [HideInInspector] public int skillpoint;
+    [HideInInspector] public float attackspeed;
+    [HideInInspector] public float skillGuage;
+    [HideInInspector] public bool firstSetting = true;
     public virtual void  Die()
     {
         StopObjects.Clear();
         FoundObjects.Clear();
         gameObject.SetActive(false);
+        button.SetActive(true);
+        skillActive.SetActive(false);
+        UIManager.AbletoValue++;
     }
     public virtual void Despwan()
     {
         StopObjects.Clear();
         FoundObjects.Clear();
         gameObject.SetActive(false);
+        button.SetActive(true);
+        skillActive.SetActive(false);
+        UIManager.AbletoValue++;
+        UIManager.costValue += (button.GetComponent<OperatorsButton>().Cost / 2);
     }
-    public virtual void Defend()
-    {
-
-    }
+    
     
 }

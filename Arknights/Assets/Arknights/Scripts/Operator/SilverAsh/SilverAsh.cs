@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,14 +6,17 @@ public class SilverAsh : Operators
 {
 
 
-   
+    [HideInInspector]
     public GameObject enemy;
+    [HideInInspector]
     public string TagName;
+    [HideInInspector]
     public float shortDis;
     public Image HPBar;
+    public Image skillBar;
     public Transform range;
-        
-    private  Animator animator;
+
+    private Animator animator;
     private bool OnClick = false;
     private bool Alive = true;
     private float PosX;
@@ -23,6 +25,7 @@ public class SilverAsh : Operators
     private int TileY;
     private int direct = 0;
     private float HPguage;
+
     void Awake()
     {
         gameObject.GetComponent<BoxCollider>().enabled = false;
@@ -30,46 +33,77 @@ public class SilverAsh : Operators
         maxHP = 10;
         HP = maxHP;
         attack = 1;
-        defence = 1;
-        resist = 10;
-        respawn = 70;
-        spawnCost = 19;
         ableToStop = 2;
         attackspeed = 1.3f;
+        skillGuage = 0;
+        maxSkillpoint = 5;
     }
     public override void Despwan()
     {
         base.Despwan();
+        button.GetComponent<OperatorsButton>().timer = 60;
         Alive = true;
         firstSetting = true;
         HP = maxHP;
         gameObject.GetComponent<BoxCollider>().enabled = false;
         Stop = 0;
+        skillGuage = 0;
     }
     public override void Die()
     {
         base.Die();
+        button.GetComponent<OperatorsButton>().timer = 60;
         Alive = true;
         firstSetting = true;
-        HP= maxHP;
+        HP = maxHP;
         gameObject.GetComponent<BoxCollider>().enabled = false;
         Stop = 0;
+        skillGuage = 0;
     }
     private void Update()
     {
-        HPguage = (float)HP / (float)maxHP;
-        HPBar.fillAmount= HPguage;
-        if (HP == 0)
+        if(Input.GetMouseButtonDown(0))
         {
-            if(Alive)
+            if(firstSetting)
             {
-                Alive= false;
-                SelectOperator.selectedTarget = null;
-                animator.SetTrigger("IsDie");
+                if (OnClick == false)
+                {
+                    if (UIManager.onDoubleSpeed)
+                    {
+                        Time.timeScale = 2;
+                    }
+                    else
+                    {
+                        Time.timeScale = 1;
+                    }
+                    gameObject.SetActive(false);
+                }
             }
             
         }
-        if(StopObjects.Count !=0)
+        HPguage = (float)HP / (float)maxHP;
+        HPBar.fillAmount = HPguage;
+        if (HP == 0)
+        {
+            if (Alive)
+            {
+                Alive = false;
+                SelectOperator.selectedTarget = null;
+                animator.SetTrigger("IsDie");
+            }
+
+        }
+        skillGuage = (float)skillpoint / (float)maxSkillpoint;
+        skillBar.fillAmount = skillGuage;
+        if (skillGuage >= 1)
+        {
+            skillActive.SetActive(true);
+        }
+        else
+        {
+            skillActive.SetActive(false);
+        }
+        if (StopObjects.Count != 0)
         {
             enemy = StopObjects[0];
         }
@@ -94,14 +128,14 @@ public class SilverAsh : Operators
             {
                 enemy = null;
             }
-            
-            
+
+
         }
 
         if (firstSetting == false)
         {
             animator.SetBool("SettingOn", true);
-            if (StopObjects.Count !=0 || FoundObjects.Count != 0)
+            if (StopObjects.Count != 0 || FoundObjects.Count != 0)
             {
                 if (enemy.GetComponent<Enemy>().HP <= 0)
                 {
@@ -114,17 +148,18 @@ public class SilverAsh : Operators
                 animator.SetBool("IsAttack", false);
             }
         }
-        
+
     }
 
     public void attackenemy()
     {
         Enemy enemi = enemy.GetComponent<Enemy>();
-        if(enemi.HP > 0 )
+        if (enemi.HP > 0)
         {
             enemi.HP--;
+            skillpoint++;
         }
-        else if(enemi.HP <= 0)
+        else if (enemi.HP <= 0)
         {
             FoundObjects.Remove(enemy.gameObject);
         }
@@ -132,25 +167,25 @@ public class SilverAsh : Operators
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Enemy")
+        if (other.tag == "Enemy")
         {
             if (!FoundObjects.Contains(other.gameObject))
             {
                 FoundObjects.Add(other.gameObject);
             }
-           
+
         }
-        
+
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.tag == "Enemy")
         {
-            if(FoundObjects.Contains(other.gameObject))
+            if (FoundObjects.Contains(other.gameObject))
             {
                 FoundObjects.Remove(other.gameObject);
             }
-            
+
         }
     }
 
@@ -159,12 +194,12 @@ public class SilverAsh : Operators
     {
         if (firstSetting)
         {
+            button.SetActive(false);
             OnClick = true;
             PosX = Input.mousePosition.x;
             PosY = Input.mousePosition.y;
             TileX = (int)SilverAshButton.tileposition.position.x / 4;
             TileY = (int)SilverAshButton.tileposition.position.z / 4;
-
         }
     }
     private void OnMouseDrag()
@@ -216,7 +251,7 @@ public class SilverAsh : Operators
                         default:
                             break;
                     }
-                    
+
                     direct = 2;
                     Left();
                 }
@@ -318,14 +353,23 @@ public class SilverAsh : Operators
         if (firstSetting)
         {
             OnClick = false;
-            
-            if(direct != 0)
+
+            if (direct != 0)
             {
-                Time.timeScale = 1;
+                if (UIManager.onDoubleSpeed)
+                {
+                    Time.timeScale = 2;
+                }
+                else
+                {
+                    Time.timeScale = 1;
+                }
+                UIManager.costValue -= button.GetComponent<OperatorsButton>().Cost;
+                UIManager.AbletoValue--;
                 gameObject.GetComponent<BoxCollider>().enabled = true;
                 firstSetting = false;
             }
-            
+
             switch (direct)
             {
                 case 1:

@@ -11,6 +11,7 @@ public class ExusiaiButton : OperatorsButton, IPointerDownHandler, IPointerUpHan
     public override void Start()
     {
         base.Start();
+        timeValue = 40;
         Cost = 12;
         tile = "Wall";
         PosY = 3;

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,7 +14,8 @@ public class SelectOperator : MonoBehaviour
     public Transform myTransform; //Object you want to rotate
     public GameObject UI;
     public Image skill;
-    
+    public Image skillGuage;
+    public Image operatorillust;
     private Vector2 screenPoint;
 
     public static SelectOperator Instance
@@ -51,7 +53,8 @@ public class SelectOperator : MonoBehaviour
         selectedTarget = obj;
         
         skill.sprite = selectedTarget.GetComponent<Operators>().skill;
-
+        operatorillust.sprite = selectedTarget.GetComponent<Operators>().illust;
+        skillGuage.fillAmount = selectedTarget.GetComponent<Operators>().skillGuage;
     }
 
     void Update()
@@ -68,6 +71,7 @@ public class SelectOperator : MonoBehaviour
                 if(obj.GetComponent<Operators>().firstSetting == false)
                 {
                     selectTarget(obj);
+                    
                 }
                 
             }
@@ -76,7 +80,7 @@ public class SelectOperator : MonoBehaviour
                 int layer2 = 1 << LayerMask.NameToLayer("UI");
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, layer2))
                 {
-                    Debug.Log("여기 오는건가");
+                    
 
                 }
                 else
@@ -89,6 +93,7 @@ public class SelectOperator : MonoBehaviour
         if (selectedTarget != null)
         {
             Cam.position = new Vector3(selectedTarget.position.x + 10, 20, selectedTarget.position.z);
+            skillGuage.fillAmount = selectedTarget.GetComponent<Operators>().skillGuage;
         }
         else
         {

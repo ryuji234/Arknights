@@ -121,6 +121,7 @@ public class Enemy : MonoBehaviour
         {
             
             Set = true;
+            UIManager.hp--;
             UIManager.passedEnemyNumber++;
             gameObject.SetActive(false);
             return;

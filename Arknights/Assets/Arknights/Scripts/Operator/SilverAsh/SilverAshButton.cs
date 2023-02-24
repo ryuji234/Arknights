@@ -10,6 +10,7 @@ public class SilverAshButton : OperatorsButton, IPointerDownHandler, IPointerUpH
     {
 
         base.Start();
+        timeValue = 60;
         Cost = 18;
         tile = "Road";
         PosY = 2;

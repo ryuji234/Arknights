@@ -4,5 +4,17 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Arknights/Scenes/TitleScene.unity
+    guid: a94278ea6efa9c943b81ad0ef7649bed
+  - enabled: 1
+    path: Assets/Arknights/Scenes/MainMissionScene.unity
+    guid: 755a925448dbcc44b896b0d4686763fd
+  - enabled: 1
+    path: Assets/Arknights/Scenes/StageScene.unity
+    guid: 39a2c4258e39a5f47bb2059194936a1a
+  - enabled: 1
+    path: Assets/Arknights/Scenes/BattleScene.unity
+    guid: d85aeda8d383c2c43841b09df978b717
   m_configObjects: {}

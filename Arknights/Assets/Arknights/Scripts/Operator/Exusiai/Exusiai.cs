@@ -1,19 +1,24 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class Exusiai : Operators
 {
-    
+    [HideInInspector]
     public GameObject enemy;
+    [HideInInspector]
     public string TagName;
+    [HideInInspector]
     public float shortDis;
     public Image HPBar;
+    public Image skillBar;
     public Transform range;
 
     private Animator animator;
     private bool OnClick = false;
     private bool Alive = true;
+    private bool skillready = false;
     private float PosX;
     private float PosY;
     private int TileX;
@@ -27,16 +32,14 @@ public class Exusiai : Operators
         maxHP = 10;
         HP = maxHP;
         attack = 1;
-        defence = 1;
-        resist = 10;
-        respawn = 70;
-        spawnCost = 19;
         ableToStop = 2;
         attackspeed = 1.3f;
+        maxSkillpoint = 6;
     }
     public override void Despwan()
     {
         base.Despwan();
+        button.GetComponent<OperatorsButton>().timer = 40; 
         Alive = true;
         firstSetting = true;
         HP = maxHP;
@@ -46,6 +49,7 @@ public class Exusiai : Operators
     public override void Die()
     {
         base.Die();
+        button.GetComponent<OperatorsButton>().timer = 40;
         Alive = true;
         firstSetting = true;
         HP = maxHP;
@@ -54,6 +58,24 @@ public class Exusiai : Operators
     }
     private void Update()
     {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (firstSetting)
+            {
+                if (OnClick == false)
+                {
+                    if (UIManager.onDoubleSpeed)
+                    {
+                        Time.timeScale = 2;
+                    }
+                    else
+                    {
+                        Time.timeScale = 1;
+                    }
+                    gameObject.SetActive(false);
+                }
+            }
+        }
         HPguage = (float)HP / (float)maxHP;
         HPBar.fillAmount = HPguage;
         if (HP == 0)
@@ -65,6 +87,17 @@ public class Exusiai : Operators
                 animator.SetTrigger("IsDie");
             }
 
+        }
+        skillGuage = (float)skillpoint / (float)maxSkillpoint;
+        skillBar.fillAmount = skillGuage;
+        if (skillGuage >= 1)
+        {
+            skillActive.SetActive(true);
+            skillready = true; 
+        }
+        else
+        {
+            skillActive.SetActive(false);
         }
         if (StopObjects.Count != 0)
         {
@@ -119,7 +152,21 @@ public class Exusiai : Operators
         Enemy enemi = enemy.GetComponent<Enemy>();
         if (enemi.HP > 0)
         {
-            enemi.HP--;
+            if(skillready)
+            {
+                for(int i=0;i<3;i++)
+                {
+                    enemi.HP--;
+                }
+                skillpoint = 0;
+                skillready= false;
+            }
+            else
+            {
+                enemi.HP--;
+                skillpoint++;
+            }
+            
         }
         else if (enemi.HP <= 0)
         {
@@ -156,6 +203,7 @@ public class Exusiai : Operators
     {
         if (firstSetting)
         {
+            button.SetActive(false);
             OnClick = true;
             PosX = Input.mousePosition.x;
             PosY = Input.mousePosition.y;
@@ -318,7 +366,16 @@ public class Exusiai : Operators
 
             if (direct != 0)
             {
-                Time.timeScale = 1;
+                if (UIManager.onDoubleSpeed)
+                {
+                    Time.timeScale = 2;
+                }
+                else
+                {
+                    Time.timeScale = 1;
+                }
+                UIManager.costValue -= button.GetComponent<OperatorsButton>().Cost;
+                UIManager.AbletoValue--;
                 gameObject.GetComponent<BoxCollider>().enabled = true;
                 firstSetting = false;
             }
