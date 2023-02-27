@@ -5,14 +5,31 @@ using UnityEngine;
 public class Exusiaianimationcontrol : MonoBehaviour
 {
     public Exusiai exusiai;
-    // Start is called before the first frame update
+    public List<AudioClip> clipList;
+
+    public AudioSource exusiaiAudio;
+
+    private void Start()
+    {
+        exusiaiAudio= GetComponent<AudioSource>();
+    }
     private void Hit()
     {
+        if(Exusiai.skillready)
+        {
+            exusiaiAudio.clip = clipList[1];
+        }
+        else
+        {
+            exusiaiAudio.clip = clipList[0];
+        }
+        exusiaiAudio.Play();
         exusiai.attackenemy();
     }
     private void Die()
     {
-
+        exusiaiAudio.clip = clipList[2];
+        exusiaiAudio.Play();
         exusiai.Die();
     }
 }

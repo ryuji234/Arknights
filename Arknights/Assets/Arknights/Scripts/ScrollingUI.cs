@@ -150,7 +150,7 @@ public class ScrollingUI : MonoBehaviour
         while (Bg.transform.localScale.x > 1.2)
         {
 
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSecondsRealtime(0.05f);
             Bg.transform.localScale *= decrease;
             //decrease *= 0.9f;
         }
@@ -166,21 +166,21 @@ public class ScrollingUI : MonoBehaviour
         Color c = FadePannel.GetComponent<Image>().color;
         c.a = 1;
         FadePannel.GetComponent<Image>().color = c;
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSecondsRealtime(0.5f);
         for (float f = 1f; f > 0; f -= 0.002f)
         {
             c.a = f;
             FadePannel.GetComponent<Image>().color = c;
             yield return null;
         }
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSecondsRealtime(1);
         FadePannel.SetActive(false);
 
     }
 
     public IEnumerator SelectEpisode()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSecondsRealtime(1.5f);
         switch (stage.name)
         {
             case "Stage_1":
@@ -249,5 +249,9 @@ public class ScrollingUI : MonoBehaviour
         }
         selectEpisode = true;
 
+    }
+    public void BacktoTitle()
+    {
+        SceneManager.LoadScene(GDate.SCENE_NAME_TITLE);
     }
 }

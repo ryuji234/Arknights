@@ -19,12 +19,17 @@ public class UIManager : MonoBehaviour
     public GameObject resultBanner;
     public GameObject FadePannel;
     public Image CostGuage;
+    public static bool isDead = false;
+    public static bool isEscape = false;
+    public static bool active = false;
     public static int hp = 5;
     public static int passedEnemyNumber;
     public static int costValue;
     public static int AbletoValue;
     public static bool onDoubleSpeed = false;
     public List<Image> operatorImg = new List<Image>();
+    public List<AudioClip> audioClips = new List<AudioClip>();
+    public static AudioSource uiAudio;
 
     private List<Image> operatorImgSet = new List<Image>();
     private bool onPause = false;
@@ -36,8 +41,10 @@ public class UIManager : MonoBehaviour
     private int speed = 30;
     private float timer = 0;
     private bool click;
+    private bool battleFinish = false;
     void Start()
     {
+        uiAudio = GetComponent<AudioSource>();
         click = true;
         missionabnner.SetActive(false);
         missionAccomplished.SetActive(false);
@@ -50,35 +57,59 @@ public class UIManager : MonoBehaviour
         AbletoValue = 8;
         foreach (Image setting in operatorImg)
         {
-            Image Operbutton = Instantiate(setting, null);
-            Operbutton.transform.SetParent(OperatorSetting.transform, false);
-            Operbutton.transform.localPosition += new Vector3(-70 * num, 0, 0);
-            num++;
+            operatorImgSet.Add(Instantiate(setting, OperatorSetting.transform));
         }
 
+        for (int i = 0; i < operatorImgSet.Count; i++)
+        {
+            operatorImgSet[i].transform.localPosition = new Vector3(-70f * i, 0, 0);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(start)
+        if (start)
         {
             StartCoroutine(LoadtoBattle());
-            start= false;
+            start = false;
         }
-        
+
+        if (active)
+        {
+            for (int i = 0; i < operatorImgSet.Count; i++)
+            {
+                if (operatorImgSet[i].gameObject.activeSelf)
+                {
+                    operatorImgSet[i].transform.localPosition = new Vector3(-70f * num, 0, 0);
+                    num++;
+                }
+
+            }
+            num = 0;
+            active = false;
+        }
+
         GF.SetTextMeshPro(TowerHP, $"{hp}");
         GF.SetTextMeshPro(EnemyNumber, $"{enemyNumber}/{passedEnemyNumber}");
         GF.SetTextMeshPro(Cost, $"{costValue}");
         GF.SetTextMeshPro(AbletoSetting, $"{AbletoValue}");
         // { 체력이 남아있는 상황
-        if (hp >0)
-        {       
+        if (hp > 0)
+        {
+            // { 미션 성공
             if (passedEnemyNumber == enemyNumber)
             {
                 Time.timeScale = 0;
                 missionabnner.SetActive(true);
                 missionAccomplished.SetActive(true);
+                if(!battleFinish)
+                {
+                    uiAudio.clip = audioClips[1];
+                    uiAudio.Play();
+                    battleFinish = true;
+                }
+                
                 if (missionAccomplished.transform.localPosition.x < 0)
                 {
                     missionAccomplished.transform.Translate(Vector3.right * speed * Time.unscaledDeltaTime, Space.Self);
@@ -97,21 +128,31 @@ public class UIManager : MonoBehaviour
                             missionabnner.SetActive(false);
                             missionAccomplished.SetActive(false);
                             resultBanner.SetActive(true);
-                            
+
                         }
                     }
                 }
+
+                
             }
+            // } 미션 성공
         }
         // } 체력이 남아있는 상황
         // { 체력이 0인 상황
         else
         {
             Time.timeScale = 0;
-            missionFailed.SetActive(click);
-            if(Input.GetMouseButtonUp(0))
+            if(!battleFinish)
             {
-                click= false;
+                uiAudio.clip = audioClips[0];
+                uiAudio.Play();
+                battleFinish = true;
+            }
+            missionFailed.SetActive(click);
+            if (Input.GetMouseButtonUp(0))
+            {
+                click = false;
+                resultBanner.SetActive(true);
             }
         }
         // } 체력이 0인 상황
@@ -130,6 +171,16 @@ public class UIManager : MonoBehaviour
             }
         }
         // } 코스트 1초마다 1씩 회복, 최대 99
+        if(isDead)
+        {
+            Dead();
+            isDead= false;
+        }
+        if (isEscape)
+        {
+            Escape();
+            isEscape= false;
+        }
     }
     public void SettingImage()
     {
@@ -183,6 +234,15 @@ public class UIManager : MonoBehaviour
     {
         StartCoroutine(BacktoStage());
     }
+    public void Dead()
+    {
+        uiAudio.PlayOneShot(audioClips[2]);
+    }
+    public void Escape()
+    {
+        uiAudio.PlayOneShot(audioClips[3]);
+    }
+
     public IEnumerator LoadtoBattle()
     {
         Time.timeScale = 0;
@@ -196,14 +256,41 @@ public class UIManager : MonoBehaviour
             FadePannel.GetComponent<Image>().color = c;
             yield return null;
         }
-        
+
         FadePannel.SetActive(false);
         yield return new WaitForSecondsRealtime(1);
         Time.timeScale = 1;
     }
     public IEnumerator BacktoStage()
     {
+        Time.timeScale = 1;
         SceneManager.LoadScene(GDate.SCENE_NAME_STAGE);
         yield return null;
     }
+    //public IEnumerator Win()
+    //{
+    //    Time.timeScale = 0;
+    //    missionabnner.SetActive(true);
+    //    missionAccomplished.SetActive(true);
+    //    uiAudio.clip = audioClips[1];
+    //    uiAudio.Play();
+
+    //    while (missionAccomplished.transform.localPosition.x < 0)
+    //    {
+    //        missionAccomplished.transform.Translate(Vector3.right * speed * Time.unscaledDeltaTime, Space.Self);
+    //    }
+
+
+    //    yield return new WaitForSecondsRealtime(1f);
+
+    //    while (missionAccomplished.transform.localPosition.x < 1300)
+    //    {
+    //        missionAccomplished.transform.Translate(Vector3.right * speed * Time.unscaledDeltaTime, Space.Self);
+    //    }
+
+    //    missionabnner.SetActive(false);
+    //    missionAccomplished.SetActive(false);
+    //    resultBanner.SetActive(true);
+
+    //}
 }

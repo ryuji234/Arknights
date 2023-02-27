@@ -30,9 +30,12 @@ public class SilverAsh : Operators
     {
         gameObject.GetComponent<BoxCollider>().enabled = false;
         animator = GetComponentInChildren<Animator>();
+        operatorname = "실버애쉬";
         maxHP = 10;
         HP = maxHP;
-        attack = 1;
+        attack = 713;
+        defence = 397;
+        resist = 10;
         ableToStop = 2;
         attackspeed = 1.3f;
         skillGuage = 0;
@@ -189,13 +192,12 @@ public class SilverAsh : Operators
         }
     }
 
-
+    
     private void OnMouseDown()
     {
+        OnClick = true;
         if (firstSetting)
         {
-            button.SetActive(false);
-            OnClick = true;
             PosX = Input.mousePosition.x;
             PosY = Input.mousePosition.y;
             TileX = (int)SilverAshButton.tileposition.position.x / 4;
@@ -206,7 +208,6 @@ public class SilverAsh : Operators
     {
         if (OnClick)
         {
-
 
             if (Math.Abs(Input.mousePosition.x - PosX) > Math.Abs(Input.mousePosition.y - PosY))
             {
@@ -350,9 +351,9 @@ public class SilverAsh : Operators
     }
     private void OnMouseUp()
     {
+        OnClick = false;
         if (firstSetting)
         {
-            OnClick = false;
 
             if (direct != 0)
             {
@@ -364,6 +365,8 @@ public class SilverAsh : Operators
                 {
                     Time.timeScale = 1;
                 }
+                button.SetActive(false);
+                UIManager.active= true;
                 UIManager.costValue -= button.GetComponent<OperatorsButton>().Cost;
                 UIManager.AbletoValue--;
                 gameObject.GetComponent<BoxCollider>().enabled = true;
@@ -408,15 +411,16 @@ public class SilverAsh : Operators
                 for (int j = -1; j < 2; j++)
                 {
 
-                    Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.magenta;
-
+                    //Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX + j, TileY + i].gameObject.SetActive(true);
                 }
             }
             else
             {
                 if (TileY + i < 10)
                 {
-                    Map.Tile[TileX, TileY + i].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    //Map.Tile[TileX, TileY + i].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX, TileY + i].gameObject.SetActive(true);
                 }
             }
         }
@@ -433,13 +437,13 @@ public class SilverAsh : Operators
 
                     if (Map.Tile[TileX + j, TileY + i].tag == "Road" || Map.Tile[TileX + j, TileY + i].tag == "Wall")
                     {
-                        Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
-
+                    RangeMap.Tile[TileX + j, TileY + i].gameObject.SetActive(false);
                 }
             }
             else
@@ -448,12 +452,13 @@ public class SilverAsh : Operators
                 {
                     if (Map.Tile[TileX, TileY + i].tag == "Road" || Map.Tile[TileX, TileY + i].tag == "Wall")
                     {
-                        Map.Tile[TileX, TileY + i].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX, TileY + i].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX, TileY + i].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX, TileY + i].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
+                    RangeMap.Tile[TileX, TileY + i].gameObject.SetActive(false);
                 }
             }
         }
@@ -467,15 +472,16 @@ public class SilverAsh : Operators
                 for (int j = -1; j < 2; j++)
                 {
 
-                    Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.magenta;
-
+                    //Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX + j, TileY - i].gameObject.SetActive(true);
                 }
             }
             else
             {
                 if (TileY - i > -1)
                 {
-                    Map.Tile[TileX, TileY - i].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    //Map.Tile[TileX, TileY - i].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX, TileY - i].gameObject.SetActive(true);
                 }
             }
         }
@@ -492,13 +498,13 @@ public class SilverAsh : Operators
 
                     if (Map.Tile[TileX + j, TileY - i].tag == "Road" || Map.Tile[TileX + j, TileY - i].tag == "Wall")
                     {
-                        Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
-
+                    RangeMap.Tile[TileX + j, TileY - i].gameObject.SetActive(false);
                 }
             }
             else
@@ -507,12 +513,13 @@ public class SilverAsh : Operators
                 {
                     if (Map.Tile[TileX, TileY - i].tag == "Road" || Map.Tile[TileX, TileY - i].tag == "Wall")
                     {
-                        Map.Tile[TileX, TileY - i].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX, TileY - i].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX, TileY - i].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX, TileY - i].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
+                    RangeMap.Tile[TileX , TileY - i].gameObject.SetActive(false);
                 }
 
             }
@@ -527,15 +534,16 @@ public class SilverAsh : Operators
                 for (int j = -1; j < 2; j++)
                 {
 
-                    Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.magenta;
-
+                    //Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX - i, TileY + j].gameObject.SetActive(true);
                 }
             }
             else
             {
                 if (TileX - i > -1)
                 {
-                    Map.Tile[TileX - i, TileY].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    //Map.Tile[TileX - i, TileY].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX - i, TileY].gameObject.SetActive(true);
                 }
             }
         }
@@ -552,13 +560,13 @@ public class SilverAsh : Operators
 
                     if (Map.Tile[TileX - i, TileY + j].tag == "Road" || Map.Tile[TileX - i, TileY + j].tag == "Wall")
                     {
-                        Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
-
+                    RangeMap.Tile[TileX - i, TileY + j].gameObject.SetActive(false);
 
                 }
             }
@@ -568,12 +576,13 @@ public class SilverAsh : Operators
                 {
                     if (Map.Tile[TileX - i, TileY].tag == "Road" || Map.Tile[TileX - i, TileY].tag == "Wall")
                     {
-                        Map.Tile[TileX - i, TileY].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX - i, TileY].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX - i, TileY].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX - i, TileY].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
+                    RangeMap.Tile[TileX - i, TileY].gameObject.SetActive(false);
                 }
 
             }
@@ -588,15 +597,16 @@ public class SilverAsh : Operators
                 for (int j = -1; j < 2; j++)
                 {
 
-                    Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.magenta;
-
+                    //Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX + i, TileY + j].gameObject.SetActive(true);
                 }
             }
             else
             {
                 if (TileX + i < 7)
                 {
-                    Map.Tile[TileX + i, TileY].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    //Map.Tile[TileX + i, TileY].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX + i, TileY ].gameObject.SetActive(true);
                 }
             }
 
@@ -615,13 +625,13 @@ public class SilverAsh : Operators
 
                     if (Map.Tile[TileX + i, TileY + j].tag == "Road" || Map.Tile[TileX + i, TileY + j].tag == "Wall")
                     {
-                        Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
-
+                    RangeMap.Tile[TileX + i, TileY + j].gameObject.SetActive(false);
                 }
             }
             else
@@ -630,12 +640,13 @@ public class SilverAsh : Operators
                 {
                     if (Map.Tile[TileX + i, TileY].tag == "Road" || Map.Tile[TileX + i, TileY].tag == "Wall")
                     {
-                        Map.Tile[TileX + i, TileY].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX + i, TileY].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX + i, TileY].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX + i, TileY].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
+                    RangeMap.Tile[TileX + i, TileY].gameObject.SetActive(false);
                 }
 
             }

@@ -13,6 +13,11 @@ public class SelectOperator : MonoBehaviour
     public Transform Cam; //Object you want to rotate
     public Transform myTransform; //Object you want to rotate
     public GameObject UI;
+    public GameObject operName;
+    public GameObject operAttackValue;
+    public GameObject operDefenceValue;
+    public GameObject operResistValue;
+    public GameObject operAbletoStopValue;
     public Image skill;
     public Image skillGuage;
     public Image operatorillust;
@@ -47,14 +52,21 @@ public class SelectOperator : MonoBehaviour
 
     void selectTarget(Transform obj)
     {
-        if (obj == null) return;
-
+        if (obj == null)
+        {            
+            return;
+        }
         UI.SetActive(true);
         selectedTarget = obj;
         
         skill.sprite = selectedTarget.GetComponent<Operators>().skill;
         operatorillust.sprite = selectedTarget.GetComponent<Operators>().illust;
         skillGuage.fillAmount = selectedTarget.GetComponent<Operators>().skillGuage;
+        GF.SetTextMeshPro(operName,selectedTarget.GetComponent<Operators>().operatorname);
+        GF.SetTextMeshPro(operAttackValue, selectedTarget.GetComponent<Operators>().attack.ToString());
+        GF.SetTextMeshPro(operDefenceValue, selectedTarget.GetComponent<Operators>().defence.ToString());
+        GF.SetTextMeshPro(operResistValue,selectedTarget.GetComponent<Operators>().resist.ToString());
+        GF.SetTextMeshPro(operAbletoStopValue, selectedTarget.GetComponent<Operators>().ableToStop.ToString());
     }
 
     void Update()
@@ -71,17 +83,15 @@ public class SelectOperator : MonoBehaviour
                 if(obj.GetComponent<Operators>().firstSetting == false)
                 {
                     selectTarget(obj);
-                    
                 }
                 
             }
-            else /* Block을 선택하지 않은 경우 */
+            else /* Operator을 선택하지 않은 경우 */
             {
                 int layer2 = 1 << LayerMask.NameToLayer("UI");
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, layer2))
                 {
                     
-
                 }
                 else
                 {

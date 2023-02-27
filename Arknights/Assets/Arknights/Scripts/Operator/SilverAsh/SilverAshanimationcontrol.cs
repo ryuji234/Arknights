@@ -5,14 +5,20 @@ using UnityEngine;
 public class SilverAshanimationcontrol : MonoBehaviour
 {
     public SilverAsh silverash;
-    // Start is called before the first frame update
+    public List<AudioClip> clipList;
+    public AudioSource silverashAudio;
+    private void Start()
+    {
+        silverashAudio= GetComponent<AudioSource>();
+    }
     private void Hit()
     {
+        silverashAudio.clip = clipList[0];
+        silverashAudio.Play();
         silverash.attackenemy();
     }
     private void Die()
     {
-        
         silverash.Die();
     }
 }

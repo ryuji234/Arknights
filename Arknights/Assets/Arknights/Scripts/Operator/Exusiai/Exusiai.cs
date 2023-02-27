@@ -14,11 +14,11 @@ public class Exusiai : Operators
     public Image HPBar;
     public Image skillBar;
     public Transform range;
+    public static bool skillready = false;
 
     private Animator animator;
     private bool OnClick = false;
     private bool Alive = true;
-    private bool skillready = false;
     private float PosX;
     private float PosY;
     private int TileX;
@@ -29,10 +29,13 @@ public class Exusiai : Operators
     {
         gameObject.GetComponent<BoxCollider>().enabled = false;
         animator = GetComponentInChildren<Animator>();
+        operatorname = "¿¢½Ã¾Æ";
         maxHP = 10;
         HP = maxHP;
-        attack = 1;
-        ableToStop = 2;
+        attack = 540;
+        defence = 161;
+        resist = 0;
+        ableToStop = 1;
         attackspeed = 1.3f;
         maxSkillpoint = 6;
     }
@@ -154,7 +157,8 @@ public class Exusiai : Operators
         {
             if(skillready)
             {
-                for(int i=0;i<3;i++)
+                
+                for (int i=0;i<3;i++)
                 {
                     enemi.HP--;
                 }
@@ -163,6 +167,7 @@ public class Exusiai : Operators
             }
             else
             {
+                
                 enemi.HP--;
                 skillpoint++;
             }
@@ -203,7 +208,7 @@ public class Exusiai : Operators
     {
         if (firstSetting)
         {
-            button.SetActive(false);
+            
             OnClick = true;
             PosX = Input.mousePosition.x;
             PosY = Input.mousePosition.y;
@@ -374,6 +379,8 @@ public class Exusiai : Operators
                 {
                     Time.timeScale = 1;
                 }
+                button.SetActive(false);
+                UIManager.active = true;
                 UIManager.costValue -= button.GetComponent<OperatorsButton>().Cost;
                 UIManager.AbletoValue--;
                 gameObject.GetComponent<BoxCollider>().enabled = true;
@@ -418,7 +425,8 @@ public class Exusiai : Operators
 
                 if (TileY + i < 10)
                 {
-                    Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    //Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX + j, TileY + i].gameObject.SetActive(true);
                 }
 
             }
@@ -437,12 +445,13 @@ public class Exusiai : Operators
                 {
                     if (Map.Tile[TileX + j, TileY + i].tag == "Road" || Map.Tile[TileX + j, TileY + i].tag == "Wall")
                     {
-                        Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
+                    RangeMap.Tile[TileX + j, TileY + i].gameObject.SetActive(false);
                 }
             }
         }
@@ -455,7 +464,8 @@ public class Exusiai : Operators
             {
                 if (TileY - i > -1)
                 {
-                    Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    //Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX + j, TileY - i].gameObject.SetActive(true);
                 }
             }
         }
@@ -472,13 +482,13 @@ public class Exusiai : Operators
 
                     if (Map.Tile[TileX + j, TileY - i].tag == "Road" || Map.Tile[TileX + j, TileY - i].tag == "Wall")
                     {
-                        Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
-
+                    RangeMap.Tile[TileX + j, TileY - i].gameObject.SetActive(false);
                 }
             }
             
@@ -493,8 +503,8 @@ public class Exusiai : Operators
                 for (int j = -1; j < 2; j++)
                 {
 
-                    Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.magenta;
-
+                    //Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX - i, TileY + j].gameObject.SetActive(true);
                 }
             }
             
@@ -512,13 +522,13 @@ public class Exusiai : Operators
 
                     if (Map.Tile[TileX - i, TileY + j].tag == "Road" || Map.Tile[TileX - i, TileY + j].tag == "Wall")
                     {
-                        Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
-
+                    RangeMap.Tile[TileX - i, TileY + j].gameObject.SetActive(false);
 
                 }
             }
@@ -534,8 +544,8 @@ public class Exusiai : Operators
                 for (int j = -1; j < 2; j++)
                 {
 
-                    Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.magenta;
-
+                    //Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.magenta;
+                    RangeMap.Tile[TileX + i, TileY + j].gameObject.SetActive(true);
                 }
             }
             
@@ -555,13 +565,13 @@ public class Exusiai : Operators
 
                     if (Map.Tile[TileX + i, TileY + j].tag == "Road" || Map.Tile[TileX + i, TileY + j].tag == "Wall")
                     {
-                        Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.white;
+                        //Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.white;
                     }
                     else
                     {
-                        Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.black;
+                        //Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.black;
                     }
-
+                    RangeMap.Tile[TileX + i, TileY + j].gameObject.SetActive(false);
                 }
             }
             

@@ -9,5 +9,14 @@ public class StageUI : MonoBehaviour
     {
         SceneManager.LoadScene(GDate.SCENE_NAME_BATTLE);
     }
+    public void BackToMain()
+    {
+        SceneManager.LoadScene(GDate.SCENE_NAME_MAIN);
+    }
+
+    public void BackToTitle()
+    {
+        SceneManager.LoadScene(GDate.SCENE_NAME_TITLE);
+    }
 
 }
