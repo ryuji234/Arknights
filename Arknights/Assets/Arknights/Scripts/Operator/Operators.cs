@@ -26,6 +26,7 @@ public class Operators : MonoBehaviour
     [HideInInspector] public float attackspeed;
     [HideInInspector] public float skillGuage;
     [HideInInspector] public bool firstSetting = true;
+    [HideInInspector] public bool Isready = false;
     public virtual void  Die()
     {
         

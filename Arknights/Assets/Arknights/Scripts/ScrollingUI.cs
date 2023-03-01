@@ -68,6 +68,7 @@ public class ScrollingUI : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             click = false;
+            SoundManager.Click();
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -98,6 +99,7 @@ public class ScrollingUI : MonoBehaviour
         }
         if (click && changeSprite)
         {
+            
             switch (stage.name)
             {
                 case "Stage_1":
@@ -252,6 +254,7 @@ public class ScrollingUI : MonoBehaviour
     }
     public void BacktoTitle()
     {
+       
         SceneManager.LoadScene(GDate.SCENE_NAME_TITLE);
     }
 }

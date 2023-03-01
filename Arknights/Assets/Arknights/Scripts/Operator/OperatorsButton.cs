@@ -89,6 +89,7 @@ public class OperatorsButton : MonoBehaviour, IPointerDownHandler, IPointerUpHan
                 else
                 {
                     onSetting = true;
+                    Oper.GetComponent<Operators>().Isready = true; 
                 }
                 for (int i = 0; i < 7; i++)     // 배치 가능한 자리에 배치
                 {

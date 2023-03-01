@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class SelectOperator : MonoBehaviour
 {
     RaycastHit hit;
-    
+
     Quaternion mainposition;
     static SelectOperator instance = null;
     public static Transform selectedTarget;
@@ -53,19 +53,19 @@ public class SelectOperator : MonoBehaviour
     void selectTarget(Transform obj)
     {
         if (obj == null)
-        {            
+        {
             return;
         }
         UI.SetActive(true);
         selectedTarget = obj;
-        
+
         skill.sprite = selectedTarget.GetComponent<Operators>().skill;
         operatorillust.sprite = selectedTarget.GetComponent<Operators>().illust;
         skillGuage.fillAmount = selectedTarget.GetComponent<Operators>().skillGuage;
-        GF.SetTextMeshPro(operName,selectedTarget.GetComponent<Operators>().operatorname);
+        GF.SetTextMeshPro(operName, selectedTarget.GetComponent<Operators>().operatorname);
         GF.SetTextMeshPro(operAttackValue, selectedTarget.GetComponent<Operators>().attack.ToString());
         GF.SetTextMeshPro(operDefenceValue, selectedTarget.GetComponent<Operators>().defence.ToString());
-        GF.SetTextMeshPro(operResistValue,selectedTarget.GetComponent<Operators>().resist.ToString());
+        GF.SetTextMeshPro(operResistValue, selectedTarget.GetComponent<Operators>().resist.ToString());
         GF.SetTextMeshPro(operAbletoStopValue, selectedTarget.GetComponent<Operators>().ableToStop.ToString());
     }
 
@@ -74,30 +74,31 @@ public class SelectOperator : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
+            
 
             int layer = 1 << LayerMask.NameToLayer("Operators");
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layer))
             {
                 Transform obj = hit.transform;
-                if(obj.GetComponent<Operators>().firstSetting == false)
+                if (obj.GetComponent<Operators>().firstSetting == false)
                 {
                     selectTarget(obj);
                 }
-                
+
             }
-            else /* Operator을 선택하지 않은 경우 */
+            else /* Operator를 선택하지 않은 경우 */
             {
+
                 int layer2 = 1 << LayerMask.NameToLayer("UI");
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, layer2))
                 {
-                    
+
                 }
                 else
                 {
                     clearTarget();
                 }
-                
+
             }
         }
         if (selectedTarget != null)
