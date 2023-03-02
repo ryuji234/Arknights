@@ -169,7 +169,7 @@ public class ScrollingUI : MonoBehaviour
         c.a = 1;
         FadePannel.GetComponent<Image>().color = c;
         yield return new WaitForSecondsRealtime(0.5f);
-        for (float f = 1f; f > 0; f -= 0.002f)
+        for (float f = 1f; f > 0; f -= 0.02f)
         {
             c.a = f;
             FadePannel.GetComponent<Image>().color = c;

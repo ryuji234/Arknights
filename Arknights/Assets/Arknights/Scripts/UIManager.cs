@@ -33,7 +33,6 @@ public class UIManager : MonoBehaviour
 
     private List<Image> operatorImgSet = new List<Image>();
     private bool onPause = false;
-    private bool allSet = false;
     private bool start = true;
     private int num = 0;
     private int enemyNumber = 11;
@@ -44,6 +43,9 @@ public class UIManager : MonoBehaviour
     private bool battleFinish = false;
     void Start()
     {
+        battleFinish = false;
+        onDoubleSpeed = false;
+        onPause= false;
         uiAudio = GetComponent<AudioSource>();
         click = true;
         missionabnner.SetActive(false);
@@ -65,7 +67,7 @@ public class UIManager : MonoBehaviour
             operatorImgSet[i].transform.localPosition = new Vector3(-70f * i, 0, 0);
         }
     }
-
+    
     // Update is called once per frame
     void Update()
     {
@@ -182,15 +184,6 @@ public class UIManager : MonoBehaviour
             isEscape= false;
         }
     }
-    public void SettingImage()
-    {
-        if (allSet == false)
-        {
-            operatorImgSet.Clear();
-            operatorImgSet.AddRange(operatorImg);
-
-        }
-    }
     public void OnPause()
     {
         if (onPause)
@@ -250,7 +243,7 @@ public class UIManager : MonoBehaviour
         c.a = 1;
         FadePannel.GetComponent<Image>().color = c;
         yield return new WaitForSecondsRealtime(0.5f);
-        for (float f = 1f; f > 0; f -= 0.002f)
+        for (float f = 1f; f > 0; f -= 0.02f)
         {
             c.a = f;
             FadePannel.GetComponent<Image>().color = c;

@@ -14,21 +14,17 @@ public class SilverAsh : Operators
     public float shortDis;
     public Image HPBar;
     public Image skillBar;
-    public Transform range;
+    
 
     private Animator animator;
-    private bool OnClick = false;
     private bool Alive = true;
-    private float PosX;
-    private float PosY;
     private int TileX;
     private int TileY;
-    private int direct = 0;
     private float HPguage;
 
     void Awake()
     {
-        gameObject.GetComponent<BoxCollider>().enabled = false;
+        firstSetting = true;
         animator = GetComponentInChildren<Animator>();
         operatorname = "실버애쉬";
         maxHP = 10;
@@ -39,7 +35,7 @@ public class SilverAsh : Operators
         ableToStop = 2;
         attackspeed = 1.3f;
         skillGuage = 0;
-        maxSkillpoint = 5;
+        maxSkillpoint = 15;
     }
     public override void Despwan()
     {
@@ -48,7 +44,7 @@ public class SilverAsh : Operators
         Alive = true;
         firstSetting = true;
         HP = maxHP;
-        gameObject.GetComponent<BoxCollider>().enabled = false;
+        
         Stop = 0;
         skillGuage = 0;
     }
@@ -59,31 +55,13 @@ public class SilverAsh : Operators
         Alive = true;
         firstSetting = true;
         HP = maxHP;
-        gameObject.GetComponent<BoxCollider>().enabled = false;
+        
         Stop = 0;
         skillGuage = 0;
     }
-    private void Update()
+    public override void Update()
     {
-        if(Input.GetMouseButtonDown(0))
-        {
-            if(firstSetting)
-            {
-                if (OnClick == false)
-                {
-                    if (UIManager.onDoubleSpeed)
-                    {
-                        Time.timeScale = 2;
-                    }
-                    else
-                    {
-                        Time.timeScale = 1;
-                    }
-                    gameObject.SetActive(false);
-                }
-            }
-            
-        }
+        base.Update();
         HPguage = (float)HP / (float)maxHP;
         HPBar.fillAmount = HPguage;
         if (HP == 0)
@@ -192,215 +170,18 @@ public class SilverAsh : Operators
         }
     }
 
+
+    public override void TilePosition()
+    {
+        base.TilePosition();
+        PosX = Input.mousePosition.x;
+        PosY = Input.mousePosition.y;
+        TileX = (int)SilverAshButton.tileposition.position.x / 4;
+        TileY = (int)SilverAshButton.tileposition.position.z / 4;
+
+    }
     
-    private void OnMouseDown()
-    {
-        OnClick = true;
-        if (firstSetting)
-        {
-            PosX = Input.mousePosition.x;
-            PosY = Input.mousePosition.y;
-            TileX = (int)SilverAshButton.tileposition.position.x / 4;
-            TileY = (int)SilverAshButton.tileposition.position.z / 4;
-        }
-    }
-    private void OnMouseDrag()
-    {
-        if (OnClick)
-        {
-
-            if (Math.Abs(Input.mousePosition.x - PosX) > Math.Abs(Input.mousePosition.y - PosY))
-            {
-                if (Input.mousePosition.x - PosX > 100)
-                {
-                    switch (direct)
-                    {
-                        case 1:
-                            ClearRight();
-                            break;
-                        case 2:
-                            ClearLeft();
-                            break;
-                        case 3:
-                            ClearUp();
-                            break;
-                        case 4:
-                            ClearDown();
-                            break;
-                        default:
-                            break;
-                    }
-                    direct = 1;
-                    Right();
-                }
-                else if (Input.mousePosition.x - PosX < -100)
-                {
-                    switch (direct)
-                    {
-                        case 1:
-                            ClearRight();
-                            break;
-                        case 2:
-                            ClearLeft();
-                            break;
-                        case 3:
-                            ClearUp();
-                            break;
-                        case 4:
-                            ClearDown();
-                            break;
-                        default:
-                            break;
-                    }
-
-                    direct = 2;
-                    Left();
-                }
-                else
-                {
-                    switch (direct)
-                    {
-                        case 1:
-                            ClearRight();
-                            break;
-                        case 2:
-                            ClearLeft();
-                            break;
-                        case 3:
-                            ClearUp();
-                            break;
-                        case 4:
-                            ClearDown();
-                            break;
-                        default:
-                            break;
-                    }
-                    direct = 0;
-                }
-            }
-            else
-            {
-                if (Input.mousePosition.y - PosY > 100)
-                {
-                    switch (direct)
-                    {
-                        case 1:
-                            ClearRight();
-                            break;
-                        case 2:
-                            ClearLeft();
-                            break;
-                        case 3:
-                            ClearUp();
-                            break;
-                        case 4:
-                            ClearDown();
-                            break;
-                        default:
-                            break;
-                    }
-                    direct = 3;
-                    Up();
-
-                }
-                else if (Input.mousePosition.y - PosY < -100)
-                {
-                    switch (direct)
-                    {
-                        case 1:
-                            ClearRight();
-                            break;
-                        case 2:
-                            ClearLeft();
-                            break;
-                        case 3:
-                            ClearUp();
-                            break;
-                        case 4:
-                            ClearDown();
-                            break;
-                        default:
-                            break;
-                    }
-                    direct = 4;
-                    Down();
-                }
-                else
-                {
-                    switch (direct)
-                    {
-                        case 1:
-                            ClearRight();
-                            break;
-                        case 2:
-                            ClearLeft();
-                            break;
-                        case 3:
-                            ClearUp();
-                            break;
-                        case 4:
-                            ClearDown();
-                            break;
-                        default:
-                            break;
-                    }
-                    direct = 0;
-                }
-            }
-        }
-    }
-    private void OnMouseUp()
-    {
-        OnClick = false;
-        if (firstSetting)
-        {
-
-            if (direct != 0)
-            {
-                if (UIManager.onDoubleSpeed)
-                {
-                    Time.timeScale = 2;
-                }
-                else
-                {
-                    Time.timeScale = 1;
-                }
-                button.SetActive(false);
-                UIManager.active= true;
-                UIManager.costValue -= button.GetComponent<OperatorsButton>().Cost;
-                UIManager.AbletoValue--;
-                gameObject.GetComponent<BoxCollider>().enabled = true;
-                firstSetting = false;
-            }
-
-            switch (direct)
-            {
-                case 1:
-                    ClearRight();
-                    range.eulerAngles = new Vector3(0f, 0f, 0f);
-                    break;
-                case 2:
-                    ClearLeft();
-                    range.eulerAngles = new Vector3(0f, -180f, 0f);
-                    break;
-                case 3:
-                    ClearUp();
-                    range.eulerAngles = new Vector3(0f, -90f, 0f);
-                    break;
-                case 4:
-                    ClearDown();
-                    range.eulerAngles = new Vector3(0f, 90f, 0f);
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    }
-
-
-
-    private void Right()
+    public override void Right()
     {
 
         for (int i = 0; i < 4; i++)
@@ -410,8 +191,6 @@ public class SilverAsh : Operators
             {
                 for (int j = -1; j < 2; j++)
                 {
-
-                    //Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.magenta;
                     RangeMap.Tile[TileX + j, TileY + i].gameObject.SetActive(true);
                 }
             }
@@ -419,14 +198,13 @@ public class SilverAsh : Operators
             {
                 if (TileY + i < 10)
                 {
-                    //Map.Tile[TileX, TileY + i].GetComponent<MeshRenderer>().material.color = Color.magenta;
                     RangeMap.Tile[TileX, TileY + i].gameObject.SetActive(true);
                 }
             }
         }
 
     }
-    private void ClearRight()
+    public override void ClearRight()
     {
         for (int i = 0; i < 4; i++)
         {
@@ -434,15 +212,6 @@ public class SilverAsh : Operators
             {
                 for (int j = -1; j < 2; j++)
                 {
-
-                    if (Map.Tile[TileX + j, TileY + i].tag == "Road" || Map.Tile[TileX + j, TileY + i].tag == "Wall")
-                    {
-                        //Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.white;
-                    }
-                    else
-                    {
-                        //Map.Tile[TileX + j, TileY + i].GetComponent<MeshRenderer>().material.color = Color.black;
-                    }
                     RangeMap.Tile[TileX + j, TileY + i].gameObject.SetActive(false);
                 }
             }
@@ -450,20 +219,12 @@ public class SilverAsh : Operators
             {
                 if (TileY + i < 10)
                 {
-                    if (Map.Tile[TileX, TileY + i].tag == "Road" || Map.Tile[TileX, TileY + i].tag == "Wall")
-                    {
-                        //Map.Tile[TileX, TileY + i].GetComponent<MeshRenderer>().material.color = Color.white;
-                    }
-                    else
-                    {
-                        //Map.Tile[TileX, TileY + i].GetComponent<MeshRenderer>().material.color = Color.black;
-                    }
                     RangeMap.Tile[TileX, TileY + i].gameObject.SetActive(false);
                 }
             }
         }
     }
-    private void Left()
+    public override void Left()
     {
         for (int i = 0; i < 4; i++)
         {
@@ -471,8 +232,6 @@ public class SilverAsh : Operators
             {
                 for (int j = -1; j < 2; j++)
                 {
-
-                    //Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.magenta;
                     RangeMap.Tile[TileX + j, TileY - i].gameObject.SetActive(true);
                 }
             }
@@ -480,14 +239,13 @@ public class SilverAsh : Operators
             {
                 if (TileY - i > -1)
                 {
-                    //Map.Tile[TileX, TileY - i].GetComponent<MeshRenderer>().material.color = Color.magenta;
                     RangeMap.Tile[TileX, TileY - i].gameObject.SetActive(true);
                 }
             }
         }
 
     }
-    private void ClearLeft()
+    public override void ClearLeft()
     {
         for (int i = 0; i < 4; i++)
         {
@@ -495,15 +253,6 @@ public class SilverAsh : Operators
             {
                 for (int j = -1; j < 2; j++)
                 {
-
-                    if (Map.Tile[TileX + j, TileY - i].tag == "Road" || Map.Tile[TileX + j, TileY - i].tag == "Wall")
-                    {
-                        //Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.white;
-                    }
-                    else
-                    {
-                        //Map.Tile[TileX + j, TileY - i].GetComponent<MeshRenderer>().material.color = Color.black;
-                    }
                     RangeMap.Tile[TileX + j, TileY - i].gameObject.SetActive(false);
                 }
             }
@@ -511,21 +260,13 @@ public class SilverAsh : Operators
             {
                 if (TileY - i > -1)
                 {
-                    if (Map.Tile[TileX, TileY - i].tag == "Road" || Map.Tile[TileX, TileY - i].tag == "Wall")
-                    {
-                        //Map.Tile[TileX, TileY - i].GetComponent<MeshRenderer>().material.color = Color.white;
-                    }
-                    else
-                    {
-                        //Map.Tile[TileX, TileY - i].GetComponent<MeshRenderer>().material.color = Color.black;
-                    }
-                    RangeMap.Tile[TileX , TileY - i].gameObject.SetActive(false);
+                    RangeMap.Tile[TileX, TileY - i].gameObject.SetActive(false);
                 }
 
             }
         }
     }
-    private void Up()
+    public override void Up()
     {
         for (int i = 0; i < 4; i++)
         {
@@ -533,8 +274,6 @@ public class SilverAsh : Operators
             {
                 for (int j = -1; j < 2; j++)
                 {
-
-                    //Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.magenta;
                     RangeMap.Tile[TileX - i, TileY + j].gameObject.SetActive(true);
                 }
             }
@@ -542,14 +281,13 @@ public class SilverAsh : Operators
             {
                 if (TileX - i > -1)
                 {
-                    //Map.Tile[TileX - i, TileY].GetComponent<MeshRenderer>().material.color = Color.magenta;
                     RangeMap.Tile[TileX - i, TileY].gameObject.SetActive(true);
                 }
             }
         }
 
     }
-    private void ClearUp()
+    public override void ClearUp()
     {
         for (int i = 0; i < 4; i++)
         {
@@ -557,38 +295,20 @@ public class SilverAsh : Operators
             {
                 for (int j = -1; j < 2; j++)
                 {
-
-                    if (Map.Tile[TileX - i, TileY + j].tag == "Road" || Map.Tile[TileX - i, TileY + j].tag == "Wall")
-                    {
-                        //Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.white;
-                    }
-                    else
-                    {
-                        //Map.Tile[TileX - i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.black;
-                    }
                     RangeMap.Tile[TileX - i, TileY + j].gameObject.SetActive(false);
-
                 }
             }
             else
             {
                 if (TileX - i > -1)
                 {
-                    if (Map.Tile[TileX - i, TileY].tag == "Road" || Map.Tile[TileX - i, TileY].tag == "Wall")
-                    {
-                        //Map.Tile[TileX - i, TileY].GetComponent<MeshRenderer>().material.color = Color.white;
-                    }
-                    else
-                    {
-                        //Map.Tile[TileX - i, TileY].GetComponent<MeshRenderer>().material.color = Color.black;
-                    }
                     RangeMap.Tile[TileX - i, TileY].gameObject.SetActive(false);
                 }
 
             }
         }
     }
-    private void Down()
+    public override void Down()
     {
         for (int i = 0; i < 4; i++)
         {
@@ -596,8 +316,6 @@ public class SilverAsh : Operators
             {
                 for (int j = -1; j < 2; j++)
                 {
-
-                    //Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.magenta;
                     RangeMap.Tile[TileX + i, TileY + j].gameObject.SetActive(true);
                 }
             }
@@ -605,8 +323,7 @@ public class SilverAsh : Operators
             {
                 if (TileX + i < 7)
                 {
-                    //Map.Tile[TileX + i, TileY].GetComponent<MeshRenderer>().material.color = Color.magenta;
-                    RangeMap.Tile[TileX + i, TileY ].gameObject.SetActive(true);
+                    RangeMap.Tile[TileX + i, TileY].gameObject.SetActive(true);
                 }
             }
 
@@ -614,7 +331,7 @@ public class SilverAsh : Operators
 
 
     }
-    private void ClearDown()
+    public override void ClearDown()
     {
         for (int i = 0; i < 4; i++)
         {
@@ -622,15 +339,6 @@ public class SilverAsh : Operators
             {
                 for (int j = -1; j < 2; j++)
                 {
-
-                    if (Map.Tile[TileX + i, TileY + j].tag == "Road" || Map.Tile[TileX + i, TileY + j].tag == "Wall")
-                    {
-                        //Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.white;
-                    }
-                    else
-                    {
-                        //Map.Tile[TileX + i, TileY + j].GetComponent<MeshRenderer>().material.color = Color.black;
-                    }
                     RangeMap.Tile[TileX + i, TileY + j].gameObject.SetActive(false);
                 }
             }
@@ -638,14 +346,6 @@ public class SilverAsh : Operators
             {
                 if (TileX + i < 7)
                 {
-                    if (Map.Tile[TileX + i, TileY].tag == "Road" || Map.Tile[TileX + i, TileY].tag == "Wall")
-                    {
-                        //Map.Tile[TileX + i, TileY].GetComponent<MeshRenderer>().material.color = Color.white;
-                    }
-                    else
-                    {
-                        //Map.Tile[TileX + i, TileY].GetComponent<MeshRenderer>().material.color = Color.black;
-                    }
                     RangeMap.Tile[TileX + i, TileY].gameObject.SetActive(false);
                 }
 

@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +9,7 @@ public class Enemy : MonoBehaviour
     public GameObject Waypoints;
     public Image HPbar;
     public int HP;
-    
+
     public Waypoint waypoint;
     public Transform target;
     public int wavepointIndex = 0;
@@ -25,7 +23,7 @@ public class Enemy : MonoBehaviour
     //Operators operators;
     public List<Operators> operators = new List<Operators>();
 
-    
+
     public virtual void Start()
     {
         Set = true;
@@ -34,7 +32,7 @@ public class Enemy : MonoBehaviour
 
     public virtual void Update()
     {
-        if(Set)
+        if (Set)
         {
             HP = maxHP;
             waypoint = Waypoints.GetComponent<Waypoint>();
@@ -45,7 +43,7 @@ public class Enemy : MonoBehaviour
         }
         HPguage = (float)HP / (float)maxHP;
         HPbar.fillAmount = HPguage;
-        
+
         if (Isrun)
         {
             anime.SetBool("IsAttack", false);
@@ -75,27 +73,31 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                if (operators[0].ableToStop > operators[0].Stop)
+                if (operators[0].GetComponent<Operators>().firstSetting== false)
                 {
-                    
-                    colliders.SetActive(true);
-                    if(contact == false)
+                    if (operators[0].ableToStop > operators[0].Stop)
                     {
-                        contact = true;
-                        Debug.Log("오퍼레이터와 접촉 공격중");
-                        operators[0].Stop++;
-                        operators[0].StopObjects.Add(gameObject);
-                        Debug.Log($"{operators[0].StopObjects.Count}");
+
+                        colliders.SetActive(true);
+                        if (contact == false)
+                        {
+                            contact = true;
+                            Debug.Log("오퍼레이터와 접촉 공격중");
+                            operators[0].Stop++;
+                            operators[0].StopObjects.Add(gameObject);
+                            Debug.Log($"{operators[0].StopObjects.Count}");
+                        }
+                        Isrun = false;
+                        colliders.SetActive(false);
+                        anime.SetBool("IsAttack", true);
+
                     }
-                    Isrun = false;
-                    colliders.SetActive(false);
-                    anime.SetBool("IsAttack", true);
+                    else
+                    {
 
+                    }
                 }
-                else
-                {
-
-                }
+                
             }
         }
         if (HP <= 0)
@@ -109,7 +111,7 @@ public class Enemy : MonoBehaviour
             }
             operators.Clear();
             Set = true;
-            
+
             gameObject.SetActive(false);
         }
 
@@ -119,7 +121,7 @@ public class Enemy : MonoBehaviour
     {
         if (wavepointIndex >= waypoint.points.Length - 1)
         {
-            
+
             Set = true;
             UIManager.hp--;
             UIManager.passedEnemyNumber++;
@@ -132,26 +134,28 @@ public class Enemy : MonoBehaviour
 
     public virtual void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Operators")
+        if (other.tag == "Operators")
         {
             operators.Add(other.GetComponent<Operators>());
         }
-        
+
     }
     public virtual void OnTriggerExit(Collider other)
     {
         if (other.tag == "Operators")
         {
+
             operators.Remove(other.GetComponent<Operators>());
+
         }
     }
 
     public virtual void HitOperator()
     {
-        if(operators.Count > 0)
+        if (operators.Count > 0)
         {
             operators[0].HP--;
         }
-        
+
     }
 }
